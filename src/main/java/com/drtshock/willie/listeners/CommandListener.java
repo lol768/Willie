@@ -1,8 +1,9 @@
-package com.drtshock.willie.command;
+package com.drtshock.willie.listeners;
 
 import java.util.Collection;
 import java.util.HashMap;
 
+import com.drtshock.willie.command.Command;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.Listener;
@@ -12,13 +13,13 @@ import org.pircbotx.hooks.events.MessageEvent;
 import com.drtshock.willie.Willie;
 import com.drtshock.willie.auth.Auth;
 
-public class CommandManager extends ListenerAdapter<Willie> implements Listener<Willie> {
+public class CommandListener extends ListenerAdapter<Willie> implements Listener<Willie> {
 
     private Willie bot;
     private HashMap<String, Command> commands;
     private String cmdPrefix;
 
-    public CommandManager(Willie bot) {
+    public CommandListener(Willie bot) {
         this.bot = bot;
         this.cmdPrefix = bot.getConfig().getCommandPrefix();
         this.commands = new HashMap<>();

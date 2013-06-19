@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.drtshock.willie.listeners.CommandListener;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
@@ -13,7 +14,6 @@ import org.pircbotx.exception.IrcException;
 import org.pircbotx.exception.NickAlreadyInUseException;
 
 import com.drtshock.willie.command.Command;
-import com.drtshock.willie.command.CommandManager;
 import com.drtshock.willie.command.admin.AdminCommandHandler;
 import com.drtshock.willie.command.admin.ReloadCommandHandler;
 import com.drtshock.willie.command.admin.SaveCommandHandler;
@@ -48,7 +48,7 @@ public class Willie extends PircBotX {
     private static String CONFIG_FILE = "config.yml";
 
     public JenkinsServer jenkins;
-    public CommandManager commandManager;
+    public CommandListener commandListener;
     private WillieConfig willieConfig;
 
     public static Willie getInstance() {
@@ -68,33 +68,33 @@ public class Willie extends PircBotX {
         GIT_AUTH = "TOKEN " + willieConfig.getGitHubApiKey();
 
         this.jenkins = new JenkinsServer(willieConfig.getJenkinsServer());
-        this.commandManager = new CommandManager(this);
+        this.commandListener = new CommandListener(this);
 
-        this.commandManager.registerCommand(new Command("repo", "show Willie's repo", new RepoCommandHandler()));
-        this.commandManager.registerCommand(new Command("latest", "<plugin_name> - Get latest file for plugin on BukkitDev", new LatestCommandHandler()));
-        this.commandManager.registerCommand(new Command("plugin", "<name> - looks up a plugin on BukkitDev", new PluginCommandHandler()));
-        this.commandManager.registerCommand(new Command("issues", "<job_name> [page] - check github issues for jobs on " + willieConfig.getJenkinsServer(), new IssuesCommandHandler()));
-        this.commandManager.registerCommand(new Command("ci", "shows Jenkins info", new CICommandHandler()));
-        this.commandManager.registerCommand(new Command("rules", "show channel rules", new RulesCommandHandler()));
-        this.commandManager.registerCommand(new Command("help", "show this help info", new HelpCommandHandler()));
-        this.commandManager.registerCommand(new Command("p", "pop some popcorn!", new PopcornCommandHandler()));
-        this.commandManager.registerCommand(new Command("twss", "that's what she said!", new TWSSCommandHandler()));
-        this.commandManager.registerCommand(new Command("donate", "shows donation info", new DonateCommandHandler()));
-        this.commandManager.registerCommand(new Command("drink", "<name> - gives someone a drink!", new DrinkCommandHandler()));
-        this.commandManager.registerCommand(new Command("fix", "[name] - Yell at someone to fix something", new FixCommandHandler()));
-        this.commandManager.registerCommand(new Command("kick", "<name> - Kick a user", new KickCommandHandler()));
-        this.commandManager.registerCommand(new Command("define", "<word|phrase> - defines a word", new DefineCommandHandler()));
-        this.commandManager.registerCommand(new Command("urban", "<word|phrase> - defines a word using the urban dictionary", new UrbanCommandHandler()));
+        this.commandListener.registerCommand(new Command("repo", "show Willie's repo", new RepoCommandHandler()));
+        this.commandListener.registerCommand(new Command("latest", "<plugin_name> - Get latest file for plugin on BukkitDev", new LatestCommandHandler()));
+        this.commandListener.registerCommand(new Command("plugin", "<name> - looks up a plugin on BukkitDev", new PluginCommandHandler()));
+        this.commandListener.registerCommand(new Command("issues", "<job_name> [page] - check github issues for jobs on " + willieConfig.getJenkinsServer(), new IssuesCommandHandler()));
+        this.commandListener.registerCommand(new Command("ci", "shows Jenkins info", new CICommandHandler()));
+        this.commandListener.registerCommand(new Command("rules", "show channel rules", new RulesCommandHandler()));
+        this.commandListener.registerCommand(new Command("help", "show this help info", new HelpCommandHandler()));
+        this.commandListener.registerCommand(new Command("p", "pop some popcorn!", new PopcornCommandHandler()));
+        this.commandListener.registerCommand(new Command("twss", "that's what she said!", new TWSSCommandHandler()));
+        this.commandListener.registerCommand(new Command("donate", "shows donation info", new DonateCommandHandler()));
+        this.commandListener.registerCommand(new Command("drink", "<name> - gives someone a drink!", new DrinkCommandHandler()));
+        this.commandListener.registerCommand(new Command("fix", "[name] - Yell at someone to fix something", new FixCommandHandler()));
+        this.commandListener.registerCommand(new Command("kick", "<name> - Kick a user", new KickCommandHandler()));
+        this.commandListener.registerCommand(new Command("define", "<word|phrase> - defines a word", new DefineCommandHandler()));
+        this.commandListener.registerCommand(new Command("urban", "<word|phrase> - defines a word using the urban dictionary", new UrbanCommandHandler()));
 
-        this.commandManager.registerCommand(new Command("join", "<channel> - Joins a channel", new JoinCommandHandler(), true));
-        this.commandManager.registerCommand(new Command("leave", "<channel> - Leaves a channel", new LeaveCommandHandler(), true));
-        this.commandManager.registerCommand(new Command("reload", "Reloads willie", new ReloadCommandHandler(), true));
-        this.commandManager.registerCommand(new Command("save", "Saves configuration", new SaveCommandHandler(), true));
-        this.commandManager.registerCommand(new Command("admin", "add <user> | del <user> | list - Modifies the bot admin list.", new AdminCommandHandler(), true));
+        this.commandListener.registerCommand(new Command("join", "<channel> - Joins a channel", new JoinCommandHandler(), true));
+        this.commandListener.registerCommand(new Command("leave", "<channel> - Leaves a channel", new LeaveCommandHandler(), true));
+        this.commandListener.registerCommand(new Command("reload", "Reloads willie", new ReloadCommandHandler(), true));
+        this.commandListener.registerCommand(new Command("save", "Saves configuration", new SaveCommandHandler(), true));
+        this.commandListener.registerCommand(new Command("admin", "add <user> | del <user> | list - Modifies the bot admin list.", new AdminCommandHandler(), true));
 
         this.setName(willieConfig.getNick());
         this.setVerbose(false);
-        this.getListenerManager().addListener(this.commandManager);
+        this.getListenerManager().addListener(this.commandListener);
     }
 
     public void connect() {
@@ -143,7 +143,7 @@ public class Willie extends PircBotX {
         willieConfig = WillieConfig.loadFromFile(CONFIG_FILE);
 
         // Update command prefix
-        commandManager.setCommandPrefix(willieConfig.getCommandPrefix());
+        commandListener.setCommandPrefix(willieConfig.getCommandPrefix());
 
         // Nick
         if (!willieConfig.getNick().equals(getNick())) {
