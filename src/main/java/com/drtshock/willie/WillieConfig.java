@@ -22,6 +22,7 @@ public class WillieConfig {
     private LinkedHashMap<String, Object> configMap = new LinkedHashMap<>();
     private ArrayList<String> botAdmins = new ArrayList<>();
     private ArrayList<String> botChannels = new ArrayList<>();
+    private ArrayList<String> logChannelBlacklist = new ArrayList<>();
     ArrayList<String> jenkinsAdmins = new ArrayList<>();
 
     public WillieConfig() {
@@ -43,6 +44,9 @@ public class WillieConfig {
         configMap.put("server", "irc.esper.net");
         configMap.put("channels", botChannels);
         configMap.put("command-prefix", "!");
+        configMap.put("log-enabled", false);
+        configMap.put("log-channel-blacklist", logChannelBlacklist);
+        configMap.put("log-directory", "./logs");
     }
 
     public LinkedHashMap<String, Object> getConfigMap() {
@@ -53,6 +57,14 @@ public class WillieConfig {
         botChannels = (ArrayList<String>) configMap.get("channels");
         botAdmins = (ArrayList<String>) configMap.get("bot-admins");
         jenkinsAdmins = (ArrayList<String>) configMap.get("jenkins-admins");
+        logChannelBlacklist = (ArrayList<String>) configMap.get("log-channel-blacklist");
+
+        // Strip trailing slash from log-directory
+        String logDirectory = (String) configMap.get("log-directory");
+        if(logDirectory.endsWith("/")) {
+            logDirectory = logDirectory.substring(1, logDirectory.length()-1);
+            configMap.put("log-directory", logDirectory);
+        }
         return this;
     }
 
@@ -102,6 +114,22 @@ public class WillieConfig {
 
     public String getJenkinsServer() {
         return (String) configMap.get("jenkins-server");
+    }
+
+    public boolean isLoggingEnabled() {
+        return (Boolean) configMap.get("log-enabled");
+    }
+
+    public boolean isChannelLogged(String channel) {
+        return isLoggingEnabled() && logChannelBlacklist.contains(channel);
+    }
+
+    public ArrayList<String> getLogBlacklist() {
+        return logChannelBlacklist;
+    }
+
+    public String getLoggingDirectory() {
+        return (String) configMap.get("log-directory");
     }
 
     public WillieConfig setJenkinsServer(String server) {

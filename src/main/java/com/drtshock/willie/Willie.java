@@ -6,6 +6,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.drtshock.willie.command.utility.*;
+import com.drtshock.willie.logging.BasicLogFormatter;
+import com.drtshock.willie.logging.LogManager;
 import org.pircbotx.Channel;
 import org.pircbotx.Colors;
 import org.pircbotx.PircBotX;
@@ -28,19 +31,13 @@ import com.drtshock.willie.command.management.LeaveCommandHandler;
 import com.drtshock.willie.command.misc.DonateCommandHandler;
 import com.drtshock.willie.command.misc.HelpCommandHandler;
 import com.drtshock.willie.command.misc.RulesCommandHandler;
-import com.drtshock.willie.command.utility.CICommandHandler;
-import com.drtshock.willie.command.utility.DefineCommandHandler;
-import com.drtshock.willie.command.utility.IssuesCommandHandler;
-import com.drtshock.willie.command.utility.LatestCommandHandler;
-import com.drtshock.willie.command.utility.PluginCommandHandler;
-import com.drtshock.willie.command.utility.RepoCommandHandler;
 import com.drtshock.willie.jenkins.JenkinsServer;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import org.pircbotx.hooks.managers.BackgroundListenerManager;
 
 public class Willie extends PircBotX {
     private static Willie instance;
-
     public static final Logger logger = Logger.getLogger(Willie.class.getName());
     public static final Gson gson = new Gson();
     public static final JsonParser parser = new JsonParser();
@@ -92,9 +89,20 @@ public class Willie extends PircBotX {
         this.commandManager.registerCommand(new Command("save", "Saves configuration", new SaveCommandHandler(), true));
         this.commandManager.registerCommand(new Command("admin", "add <user> | del <user> | list - Modifies the bot admin list.", new AdminCommandHandler(), true));
 
+        // TODO Should probably add an admin command for enabling/disabling logging globally.
+        if(willieConfig.isLoggingEnabled()) {
+            this.commandManager.registerCommand(new Command("log", "enable | disable - Enables or disables logging for the current channel, usable only by channel operators.", new LogCommandHandler()));
+
+        }
+
         this.setName(willieConfig.getNick());
         this.setVerbose(false);
-        this.getListenerManager().addListener(this.commandManager);
+
+        // We'll use a BackgroundListenerManager so that logging can have it's own thread.
+        //noinspection unchecked
+        this.setListenerManager(new BackgroundListenerManager());
+        this.getListenerManager().addListener(commandManager, false);
+        this.getListenerManager().addListener(new LogManager(this, new BasicLogFormatter()), true);
     }
 
     public void connect() {
@@ -117,6 +125,12 @@ public class Willie extends PircBotX {
             logger.severe("That nickname is already in use!");
         } catch (IrcException | IOException e) {
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public BackgroundListenerManager getListenerManager() {
+        return (BackgroundListenerManager) listenerManager;
     }
 
     @Override
