@@ -1,40 +1,35 @@
 package com.drtshock.willie;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.drtshock.willie.command.utility.*;
-import com.drtshock.willie.logging.BasicLogFormatter;
-import com.drtshock.willie.logging.LogManager;
-import org.pircbotx.Channel;
-import org.pircbotx.Colors;
-import org.pircbotx.PircBotX;
-import org.pircbotx.exception.IrcException;
-import org.pircbotx.exception.NickAlreadyInUseException;
-
 import com.drtshock.willie.command.Command;
 import com.drtshock.willie.command.CommandManager;
 import com.drtshock.willie.command.admin.AdminCommandHandler;
 import com.drtshock.willie.command.admin.ReloadCommandHandler;
 import com.drtshock.willie.command.admin.SaveCommandHandler;
-import com.drtshock.willie.command.fun.DrinkCommandHandler;
-import com.drtshock.willie.command.fun.FixCommandHandler;
-import com.drtshock.willie.command.fun.PopcornCommandHandler;
-import com.drtshock.willie.command.fun.TWSSCommandHandler;
-import com.drtshock.willie.command.fun.UrbanCommandHandler;
+import com.drtshock.willie.command.fun.*;
 import com.drtshock.willie.command.management.JoinCommandHandler;
 import com.drtshock.willie.command.management.KickCommandHandler;
 import com.drtshock.willie.command.management.LeaveCommandHandler;
 import com.drtshock.willie.command.misc.DonateCommandHandler;
 import com.drtshock.willie.command.misc.HelpCommandHandler;
 import com.drtshock.willie.command.misc.RulesCommandHandler;
+import com.drtshock.willie.command.utility.*;
 import com.drtshock.willie.jenkins.JenkinsServer;
+import com.drtshock.willie.logging.BasicLogFormatter;
+import com.drtshock.willie.logging.LogManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
+import org.pircbotx.Channel;
+import org.pircbotx.Colors;
+import org.pircbotx.PircBotX;
+import org.pircbotx.exception.IrcException;
+import org.pircbotx.exception.NickAlreadyInUseException;
 import org.pircbotx.hooks.managers.BackgroundListenerManager;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Willie extends PircBotX {
     private static Willie instance;
