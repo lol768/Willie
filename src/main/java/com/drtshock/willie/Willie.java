@@ -62,6 +62,10 @@ public class Willie extends PircBotX {
         this.jenkins = new JenkinsServer(willieConfig.getJenkinsServer());
         this.commandManager = new CommandManager(this);
 
+        //noinspection unchecked
+        this.setListenerManager(new BackgroundListenerManager());
+        this.getListenerManager().addListener(commandManager, false);
+
         this.commandManager.registerCommand(new Command("repo", "show Willie's repo", new RepoCommandHandler()));
         this.commandManager.registerCommand(new Command("latest", "<plugin_name> - Get latest file for plugin on BukkitDev", new LatestCommandHandler()));
         this.commandManager.registerCommand(new Command("plugin", "<name> - looks up a plugin on BukkitDev", new PluginCommandHandler()));
@@ -87,17 +91,11 @@ public class Willie extends PircBotX {
         // TODO Should probably add an admin command for enabling/disabling logging globally.
         if(willieConfig.isLoggingEnabled()) {
             this.commandManager.registerCommand(new Command("log", "enable | disable - Enables or disables logging for the current channel, usable only by channel operators.", new LogCommandHandler()));
-
+            this.getListenerManager().addListener(new LogManager(this, new BasicLogFormatter()), true);
         }
 
         this.setName(willieConfig.getNick());
-        this.setVerbose(false);
-
-        // We'll use a BackgroundListenerManager so that logging can have it's own thread.
-        //noinspection unchecked
-        this.setListenerManager(new BackgroundListenerManager());
-        this.getListenerManager().addListener(commandManager, false);
-        this.getListenerManager().addListener(new LogManager(this, new BasicLogFormatter()), true);
+        this.setVerbose(true);
     }
 
     public void connect() {
