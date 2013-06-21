@@ -25,7 +25,7 @@ public class LeaveCommandHandler implements CommandHandler {
                 channel.sendMessage(Colors.RED + String.format("Leaving channel %s", leaveChannel.getName()));
             }
         }
-        leaveChannel.sendMessage(Colors.RED + String.format("%s says I don't belong here...", sender.getNick()));
+        leaveChannel.sendMessage(Colors.RED + String.format("%s wants me out!", sender.getNick()));
         bot.partChannel(leaveChannel);
     }
 }

@@ -6,6 +6,7 @@ import com.drtshock.willie.command.admin.AdminCommandHandler;
 import com.drtshock.willie.command.admin.ReloadCommandHandler;
 import com.drtshock.willie.command.admin.SaveCommandHandler;
 import com.drtshock.willie.command.fun.*;
+import com.drtshock.willie.command.management.BanCommandHandler;
 import com.drtshock.willie.command.management.JoinCommandHandler;
 import com.drtshock.willie.command.management.KickCommandHandler;
 import com.drtshock.willie.command.management.LeaveCommandHandler;
@@ -79,6 +80,7 @@ public class Willie extends PircBotX {
         this.commandManager.registerCommand(new Command("drink", "<name> - gives someone a drink!", new DrinkCommandHandler()));
         this.commandManager.registerCommand(new Command("fix", "[name] - Yell at someone to fix something", new FixCommandHandler()));
         this.commandManager.registerCommand(new Command("kick", "<name> - Kick a user", new KickCommandHandler()));
+        this.commandManager.registerCommand(new Command("ban", "<name> - Kick and ban a user", new BanCommandHandler()));
         this.commandManager.registerCommand(new Command("define", "<word|phrase> - defines a word", new DefineCommandHandler()));
         this.commandManager.registerCommand(new Command("urban", "<word|phrase> - defines a word using the urban dictionary", new UrbanCommandHandler()));
 

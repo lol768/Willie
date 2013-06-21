@@ -17,7 +17,7 @@ public class JoinCommandHandler implements CommandHandler {
         } else {
             channel.sendMessage(Colors.GREEN + String.format("See you in %s!", args[0]));
             bot.joinChannel(args[0]);
-            bot.getChannel(args[0]).sendMessage(Colors.GREEN + String.format("%s told me I belong here.", sender.getNick()));
+            bot.getChannel(args[0]).sendMessage(Colors.GREEN + String.format("%s told me I belong here o/", sender.getNick()));
         }
     }
 }

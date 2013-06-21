@@ -5,15 +5,19 @@ import com.drtshock.willie.command.CommandHandler;
 import org.pircbotx.Channel;
 import org.pircbotx.User;
 
-public class KickCommandHandler implements CommandHandler {
+/**
+ *
+ * @author drtshock
+ */
+public class BanCommandHandler implements CommandHandler {
 
     @Override
     public void handle(Willie bot, Channel channel, User sender, String[] args) {
         if (args.length != 0) {
-            if (channel.getVoices().contains(sender) || channel.getOps().contains(sender)) {
+            if (channel.getOps().contains(sender)) {
                 if (channel.getUsers().contains(bot.getUser(args[0]))) {
                     if (args.length == 1) {
-                        bot.kick(channel, bot.getUser(args[0]));
+                        bot.ban(channel, bot.getUser(args[0]).getHostmask());
                     } else {
                         StringBuilder sb = new StringBuilder();
                         for (String arg : args) {
@@ -22,6 +26,7 @@ public class KickCommandHandler implements CommandHandler {
                             }
                         }
                         String reason = sb.toString().trim();
+                        bot.ban(channel, bot.getUser(args[0]).getHostmask());
                         bot.kick(channel, bot.getUser(args[0]), reason);
                     }
                 } else {
@@ -31,7 +36,7 @@ public class KickCommandHandler implements CommandHandler {
                 bot.sendNotice(sender, "You do not have permission to do that!");
             }
         } else {
-            bot.sendNotice(sender, "Usage: !kick <user>");
+            bot.sendNotice(sender, "Usage: !ban <user>");
         }
     }
 }
