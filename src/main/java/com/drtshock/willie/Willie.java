@@ -102,7 +102,7 @@ public class Willie extends PircBotX {
 
     public void connect() {
         try {
-            this.connect(willieConfig.getServer());
+            this.connect(willieConfig.getServer(), willieConfig.getServerPort(), willieConfig.getServerPass());
             this.setAutoReconnectChannels(true);
             logger.log(Level.INFO, "Connected to ''{0}''", willieConfig.getServer());
 

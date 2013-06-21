@@ -41,6 +41,8 @@ public class WillieConfig {
         configMap.put("bot-nick", "Willie");
         configMap.put("account-pass", "");
         configMap.put("server", "irc.esper.net");
+        configMap.put("server-pass", "");
+        configMap.put("server-port", 6667);
         configMap.put("channels", botChannels);
         configMap.put("command-prefix", "!");
         configMap.put("log-enabled", false);
@@ -174,8 +176,16 @@ public class WillieConfig {
         return this;
     }
 
+    public String getServerPass() {
+        return (String) configMap.get("server-pass");
+    }
+
     public String getServer() {
         return (String) configMap.get("server");
+    }
+
+    public int getServerPort() {
+        return (int) configMap.get("server-port");
     }
 
     public WillieConfig setServer(String server) {
